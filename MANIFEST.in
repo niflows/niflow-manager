@@ -1,0 +1,2 @@
+include versioneer.py
+include nfm/_version.py
