@@ -1,0 +1,22 @@
+dist: xenial
+sudo: true
+
+language: python
+python:
+  - 3.6
+  - 3.7
+
+before_install:
+  - travis_retry python -m pip install --upgrade pip setuptools wheel
+
+install:
+  - python -m pip install ".[test]"
+
+before_script:
+  - travis_retry python -m pip install pytest-cov coverage codecov
+
+script:
+  - py.test -vs --cov nfm --cov-report xml:cov.xml --doctest-modules nfm
+
+after_script:
+  - codecov --file cov.xml --flags unittests -e TRAVIS_JOB_NUMBER
