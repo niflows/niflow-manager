@@ -37,7 +37,6 @@ def test_init_path_selection(directory, organization, workflow, override, target
 
     with runner.isolated_filesystem():
         result = runner.invoke(main, args, '\n'.join(inputs))
-        print(result.stdout)
 
         if abort:
             assert result.exit_code != 0

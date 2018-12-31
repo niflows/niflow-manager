@@ -14,9 +14,9 @@ main.command()(init)
 
 @main.command()
 def install():
-    pass
+    print("install command not yet implemented")
 
 
 @main.command()
 def test():
-    pass
+    print("test command not yet implemented")
