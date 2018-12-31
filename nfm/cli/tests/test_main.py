@@ -1,5 +1,3 @@
-import os
-from pathlib import Path
 import pytest
 from click.testing import CliRunner
 from .. import main
@@ -17,3 +15,4 @@ def test_unimplemented(command):
     runner = CliRunner()
     result = runner.invoke(main, [command])
     assert result.exit_code == 0
+    assert "not yet implemented" in result.stdout
