@@ -16,7 +16,7 @@ before_script:
   - travis_retry python -m pip install pytest-cov coverage codecov
 
 script:
-  - py.test -vs --cov nfm --cov-report xml:cov.xml --doctest-modules nfm
+  - py.test -vs --cov niflow_manager --cov-report xml:cov.xml --doctest-modules niflow_manager
 
 after_script:
   - codecov --file cov.xml --flags unittests -e TRAVIS_JOB_NUMBER
