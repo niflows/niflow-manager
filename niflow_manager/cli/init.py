@@ -67,10 +67,10 @@ def init(name, language):
         'FULLNAME': full_name,
         }
 
-    copytree(pkgr_fn('nfm', 'data/templates/base'), path, mapping=mapping)
+    copytree(pkgr_fn('niflow_manager', 'data/templates/base'), path, mapping=mapping)
 
     if language is not None:
-        language_dir = Path(pkgr_fn('nfm', f'data/templates/{language}'))
+        language_dir = Path(pkgr_fn('niflow_manager', f'data/templates/{language}'))
         try:
             copytree(language_dir, path, mapping=mapping)
         except FileNotFoundError:
