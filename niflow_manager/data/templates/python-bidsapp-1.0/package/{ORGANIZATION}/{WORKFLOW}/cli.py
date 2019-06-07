@@ -43,6 +43,6 @@ def get_parser():
 # use the parser object defined above as it already includes the required BIDS app
 # paramters. 
 def main():
-    opts = get_parser().parse_args(argv)
+    opts = get_parser().parse_args()
     wf = init_{WORKFLOW}_wf(opts)
     wf.run()
