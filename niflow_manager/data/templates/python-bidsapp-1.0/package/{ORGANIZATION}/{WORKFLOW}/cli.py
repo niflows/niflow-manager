@@ -41,15 +41,11 @@ def get_parser():
     g_bids.add_argument('--ignore', action='store', default=None,
                         help='regex pattern or string to ignore files')
 
-def run_workflow(arv=None):
-
-	return None
-
 # The main function is what will be run when niflow-{ORGANIZATION}-{WORKFLOW} is called
 # Command-line arguments are available via the sys.argv list, though you should probably
 # use the parser object defined above as it already includes the required BIDS app
 # paramters. 
 def main():
-	opts = get_parser().parse_args(argv)
+    opts = get_parser().parse_args(argv)
     wf = init_{WORKFLOW}_wf(opts)
     wf.run()
