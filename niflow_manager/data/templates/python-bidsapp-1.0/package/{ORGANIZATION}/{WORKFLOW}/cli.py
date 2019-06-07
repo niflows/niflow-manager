@@ -36,10 +36,7 @@ def get_parser():
                              'removed)')
     g_bids.add_argument('--derivative-label', action='store', type=str,
                         help='execution label to append to derivative directory name')
-    g_bids.add_argument('--force-index', action='store', default=None,
-                        help='regex pattern or string to include files')
-    g_bids.add_argument('--ignore', action='store', default=None,
-                        help='regex pattern or string to ignore files')
+
 
 # The main function is what will be run when niflow-{ORGANIZATION}-{WORKFLOW} is called
 # Command-line arguments are available via the sys.argv list, though you should probably
