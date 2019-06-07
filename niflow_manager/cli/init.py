@@ -43,7 +43,9 @@ def normalize_path(name):
 
 @click.argument('name', type=click.Path(), default='.')
 @click.option('--language', help='Language for new niflow')
-def init(name, language):
+@click.option('--bids-app', default=False,
+              help='Niflow intended as a BIDS App')
+def init(name, language, bids_app):
     path, full_name, organization, workflow = normalize_path(name)
 
     click.echo(f'Initializing workflow: {path.name} in {path.parent}')
@@ -75,3 +77,12 @@ def init(name, language):
             copytree(language_dir, path, mapping=mapping)
         except FileNotFoundError:
             raise ValueError(f"Unknown language: {language}")
+
+    if bids_app:
+        if language is None:
+            raise ValueError("BIDS App templates are language-specific; please specify --language")
+        bids_app_dir = Path(pkgr_fn('niflow_manager', f'data/templates/bids-{language}'))
+        try:
+            copytree(language_dir, path, mapping=mapping)
+        except FileNotFoundError:
+            raise ValueError(f"No BIDS App template for language: {language}")
