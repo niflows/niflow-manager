@@ -5,7 +5,7 @@ import subprocess as sp
 import click
 
 from ..util.git import git_variables
-from ..util.fsutil import copytree
+from ..util.fsutil import copytree, CopyPolicy
 
 
 def normalize_path(name):
@@ -84,6 +84,6 @@ def init(name, language, bids_version):
         bids_app_dir = Path(pkgr_fn('niflow_manager',
                                     f'data/templates/{language}-bidsapp-{bids_version}'))
         try:
-            copytree(language_dir, path, mapping=mapping)
+            copytree(bids_app_dir, path, policy=CopyPolicy.OVERWRITE, mapping=mapping)
         except FileNotFoundError:
             raise ValueError(f"No BIDS App template for language: {language}")
