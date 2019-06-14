@@ -10,7 +10,7 @@ from .workflow import init_{WORKFLOW}_wf
 # as well as a few additional parameters that are nice
 def get_parser():
     """Build parser object"""
-    verstr = 'fitlins v{}'.format(__version__)
+    verstr = 'fitlins v{{}}'.format(__version__)
 
     parser = ArgumentParser(description='Describe your BIDS app here',
                             formatter_class=RawTextHelpFormatter)
