@@ -84,3 +84,28 @@ def test_init_python(gitconfig):
     else:
         assert 'Enter package author name: ' not in result.stdout
         assert 'Enter package author email: ' not in result.stdout
+
+
+@pytest.mark.parametrize("language", ["python", None])
+def test_init_bidsapp(language):
+    runner = CliRunner()
+
+    args = ['init', 'niflow-org-bidsapp', '--bids', '1.0']
+    if language is not None:
+        args.extend(['--language', language])
+
+    with runner.isolated_filesystem():
+        config_path = Path('tmp_gitconfig')
+        config_path.write_text(f'[user]\n\temail = {GIT_EMAIL}\n\tname = {GIT_AUTHOR}')
+        gitconfig = str(config_path.absolute())
+
+        result = runner.invoke(main, args, None, env={'GIT_CONFIG': gitconfig})
+
+        if language is not None:
+            assert 'pybids' in Path('niflow-org-bidsapp/package/setup.cfg').read_text()
+
+    if language is None:
+        assert result.exit_code != 0
+        assert 'language-specific' in result.exception.args[0]
+    else:
+        assert result.exit_code == 0
