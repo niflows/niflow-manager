@@ -13,15 +13,15 @@ def normalize_path(name):
     full_name = path.name
 
     # Accept organization-workflow format and normalize to niflow-organization-workflow
-    if name != '.' and not full_name.startswith('niflow-'):
-        full_name = 'niflow-' + full_name
+    if name != "." and not full_name.startswith("niflow-"):
+        full_name = "niflow-" + full_name
         path = path.with_name(full_name)
 
     # Make guesses as to organization and workflow name
-    if full_name.startswith('niflow-'):
-        name_parts = full_name.split('-', 2)[1:]
+    if full_name.startswith("niflow-"):
+        name_parts = full_name.split("-", 2)[1:]
     else:
-        name_parts = full_name.split('-', 1)
+        name_parts = full_name.split("-", 1)
 
     if len(name_parts) == 2:
         # Normal name, do not prompt
@@ -30,49 +30,56 @@ def normalize_path(name):
         # Ambiguous, ask for input
         organization = click.prompt("Organization name")
         workflow = click.prompt("Workflow name", default=name_parts[0])
-        full_name = '-'.join(['niflow', organization, workflow])
-        if name != '.':
-            if click.confirm(f'Update path to {full_name}?', default=True):
+        full_name = "-".join(["niflow", organization, workflow])
+        if name != ".":
+            if click.confirm(f"Update path to {full_name}?", default=True):
                 path = path.with_name(full_name)
         else:
-            click.confirm(f'Niflow name "{full_name}" does not match directory "{path.name}". '
-                          'Proceed anyway?', abort=True)
+            click.confirm(
+                f'Niflow name "{full_name}" does not match directory "{path.name}". '
+                "Proceed anyway?",
+                abort=True,
+            )
 
     return path, full_name, organization, workflow
 
 
-@click.argument('name', type=click.Path(), default='.')
-@click.option('--language', help='Language for new niflow')
-@click.option('--bids', 'bids_version', type=click.Choice(['1.0']),
-              help='Niflow intended as a BIDS App')
+@click.argument("name", type=click.Path(), default=".")
+@click.option("--language", help="Language for new niflow")
+@click.option(
+    "--bids",
+    "bids_version",
+    type=click.Choice(["1.0"]),
+    help="Niflow intended as a BIDS App",
+)
 def init(name, language, bids_version):
     path, full_name, organization, workflow = normalize_path(name)
 
-    click.echo(f'Initializing workflow: {path.name} in {path.parent}')
+    click.echo(f"Initializing workflow: {path.name} in {path.parent}")
     path.mkdir(parents=True, exist_ok=True)
-    sp.run(['git', '-C', str(path), 'init'], check=True)
+    sp.run(["git", "-C", str(path), "init"], check=True)
 
     try:
-        git_vars = git_variables(path, 'user.name', 'user.email')
+        git_vars = git_variables(path, "user.name", "user.email")
     except KeyError:
         username = click.prompt("Enter package author name")
         email = click.prompt("Enter package author email")
     else:
-        username = git_vars['user.name']
-        email = git_vars['user.email']
+        username = git_vars["user.name"]
+        email = git_vars["user.email"]
 
     mapping = {
-        'USERNAME': username,
-        'USEREMAIL': email,
-        'ORGANIZATION': organization,
-        'WORKFLOW': workflow,
-        'FULLNAME': full_name,
-        }
+        "USERNAME": username,
+        "USEREMAIL": email,
+        "ORGANIZATION": organization,
+        "WORKFLOW": workflow,
+        "FULLNAME": full_name,
+    }
 
-    copytree(pkgr_fn('niflow_manager', 'data/templates/base'), path, mapping=mapping)
+    copytree(pkgr_fn("niflow_manager", "data/templates/base"), path, mapping=mapping)
 
     if language is not None:
-        language_dir = Path(pkgr_fn('niflow_manager', f'data/templates/{language}'))
+        language_dir = Path(pkgr_fn("niflow_manager", f"data/templates/{language}"))
         try:
             copytree(language_dir, path, mapping=mapping)
         except FileNotFoundError:
@@ -80,9 +87,14 @@ def init(name, language, bids_version):
 
     if bids_version is not None:
         if language is None:
-            raise ValueError("BIDS App templates are language-specific; please specify --language")
-        bids_app_dir = Path(pkgr_fn('niflow_manager',
-                                    f'data/templates/{language}-bidsapp-{bids_version}'))
+            raise ValueError(
+                "BIDS App templates are language-specific; please specify --language"
+            )
+        bids_app_dir = Path(
+            pkgr_fn(
+                "niflow_manager", f"data/templates/{language}-bidsapp-{bids_version}"
+            )
+        )
         try:
             copytree(bids_app_dir, path, policy=CopyPolicy.OVERWRITE, mapping=mapping)
         except FileNotFoundError:
