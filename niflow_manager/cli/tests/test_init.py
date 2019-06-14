@@ -50,6 +50,15 @@ def test_init_path_selection(directory, organization, workflow, override, target
             assert (targ_path / '.git').exists()
 
 
+def test_init_unknown_language():
+    runner = CliRunner()
+    args = ['init', 'niflow-org-wf', '--language', 'unsupportedlanguage']
+    with runner.isolated_filesystem():
+        result = runner.invoke(main, args, None)
+        assert result.exit_code != 0
+        assert "Unknown language" in result.exception.args[0]
+
+
 @pytest.mark.parametrize("gitconfig", [os.devnull, 'tmp_gitconfig'])
 def test_init_python(gitconfig):
     runner = CliRunner()
