@@ -20,3 +20,8 @@ def install():
 @main.command()
 def test():
     print("test command not yet implemented")
+
+
+@main.command()
+def build():
+    print("build command not yet implemented")
