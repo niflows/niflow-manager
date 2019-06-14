@@ -4,4 +4,4 @@ import versioneer
 version = versioneer.get_version()
 cmdclass = versioneer.get_cmdclass()
 
-setup(version=version, cmdclass=cmdclass)
+setup(name='niflow-manager', version=version, cmdclass=cmdclass)
