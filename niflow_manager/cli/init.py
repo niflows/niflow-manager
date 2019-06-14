@@ -5,7 +5,7 @@ import subprocess as sp
 import click
 
 from ..util.git import git_variables
-from ..util.fsutil import copytree
+from ..util.fsutil import copytree, CopyPolicy
 
 
 def normalize_path(name):
@@ -43,7 +43,9 @@ def normalize_path(name):
 
 @click.argument('name', type=click.Path(), default='.')
 @click.option('--language', help='Language for new niflow')
-def init(name, language):
+@click.option('--bids', 'bids_version', type=click.Choice(['1.0']),
+              help='Niflow intended as a BIDS App')
+def init(name, language, bids_version):
     path, full_name, organization, workflow = normalize_path(name)
 
     click.echo(f'Initializing workflow: {path.name} in {path.parent}')
@@ -75,3 +77,13 @@ def init(name, language):
             copytree(language_dir, path, mapping=mapping)
         except FileNotFoundError:
             raise ValueError(f"Unknown language: {language}")
+
+    if bids_version is not None:
+        if language is None:
+            raise ValueError("BIDS App templates are language-specific; please specify --language")
+        bids_app_dir = Path(pkgr_fn('niflow_manager',
+                                    f'data/templates/{language}-bidsapp-{bids_version}'))
+        try:
+            copytree(bids_app_dir, path, policy=CopyPolicy.OVERWRITE, mapping=mapping)
+        except FileNotFoundError:
+            raise ValueError(f"No BIDS App template for language: {language}")
