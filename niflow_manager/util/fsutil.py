@@ -20,8 +20,8 @@ def copytree(src, dst, *, policy=CopyPolicy.IGNORE, mapping=None):
     if not src.exists():
         raise FileNotFoundError(src)
     dst.mkdir(parents=True, exist_ok=True)
-    for sub_src in src.glob('*'):
-        if sub_src.name == '__pycache__':
+    for sub_src in src.glob("*"):
+        if sub_src.name == "__pycache__":
             continue
         sub_dst = dst / sub_src.name.format(**mapping)
         if sub_src.is_dir():
@@ -35,6 +35,6 @@ def copytree(src, dst, *, policy=CopyPolicy.IGNORE, mapping=None):
                 elif policy == CopyPolicy.IGNORE:
                     continue
 
-            with sub_dst.open('at') as fobj_w:
-                with sub_src.open('rt') as fobj_r:
+            with sub_dst.open("at") as fobj_w:
+                with sub_src.open("rt") as fobj_r:
                     fobj_w.write(fobj_r.read().format(**mapping))

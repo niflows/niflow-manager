@@ -10,7 +10,7 @@ def test_utility_options(option):
     assert result.exit_code == 0
 
 
-@pytest.mark.parametrize("command", ["test", "install"])
+@pytest.mark.parametrize("command", ["test", "install", "build"])
 def test_unimplemented(command):
     runner = CliRunner()
     result = runner.invoke(main, [command])
