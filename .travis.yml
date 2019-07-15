@@ -1,22 +1,30 @@
 dist: xenial
 sudo: true
-
 language: python
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
 python:
   - 3.6
   - 3.7
   - 3.8-dev
 
 env:
-  - INSTALL=sdist
+  global:
+    - INSTALL=pip
+    - CHECK=test
+  matrix:
+    - INSTALL=install
+    - INSTALL=develop
+    - INSTALL=sdist
+    - INSTALL=wheel
 
 matrix:
   include:
-  - python: 3.7
-    env: INSTALL=wheel
-  - python: 3.7
-    env: INSTALL=editable
-
+    - python: 3.7
+      env: CHECK=style
 
 before_install:
   - travis_retry python -m pip install --upgrade pip setuptools wheel twine
@@ -31,20 +39,37 @@ before_install:
 
 install:
   - |
-    if [ "$INSTALL" = "sdist" ]; then
+    if [ "$INSTALL" = "pip" ]; then
+        pip install ".[test]"
+    elif [ "$INSTALL" = "install" ]; then
+        python setup.py install
+    elif [ "$INSTALL" = "develop" ]; then
+        python setup.py develop
+    elif [ "$INSTALL" = "sdist" ]; then
         pip install "$( ls dist/niflow-manager*.tar.gz )[test]"
     elif [ "$INSTALL" = "wheel" ]; then
         pip install "$( ls dist/niflow_manager*.whl )[test]"
-    elif [ "$INSTALL" = "editable" ]; then
-        pip install -e ".[test]"
     fi
   - nfm --help  # Verify basic operation without test packages
 
 before_script:
-  - travis_retry python -m pip install pytest-cov coverage codecov
+  - |
+    if [ "$CHECK" = "style" ]; then
+        pip install black
+    elif [ "$CHECK" = "test" ]; then
+        pip install pytest-cov coverage codecov
+    fi
 
 script:
-  - py.test -v -s --cov niflow_manager --cov-report xml:cov.xml --doctest-modules niflow_manager
+  - |
+    if [ "$CHECK" = "style" ]; then
+        black --check --py36 --exclude templates/python setup.py niflow_manager
+    elif [ "$CHECK" = "test" ]; then
+        py.test -v -s --cov niflow_manager --cov-report xml:cov.xml --doctest-modules niflow_manager
+    fi
 
 after_script:
-  - codecov --file cov.xml --flags unittests -e TRAVIS_JOB_NUMBER
+  - |
+    if [ "$CHECK" = "test" ]; then
+        codecov --file cov.xml --flags unittests -e TRAVIS_JOB_NUMBER
+    fi
