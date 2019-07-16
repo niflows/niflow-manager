@@ -16,6 +16,7 @@ env:
     - INSTALL=pip
     - CHECK=test
   matrix:
+    - INSTALL=pip
     - INSTALL=install
     - INSTALL=develop
     - INSTALL=sdist
