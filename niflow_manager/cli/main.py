@@ -1,7 +1,9 @@
 import click
+from pathlib import Path
 import subprocess as sp
 from .. import __version__
 from .init import init
+from .test import testkraken_specs, testkraken_run
 
 
 @click.group()
@@ -24,13 +26,9 @@ def install():
               help="Working directory, default is a temporary directory.")
 
 def test(workflow_path, working_dir=None):
-    #path, full_name, organization, workflow = normalize_path(name)
     print(f'testing {workflow_path}')
-    #path.mkdir(parents=True, exist_ok=True)
-    if working_dir:
-        sp.run(['testkraken', str(workflow_path), "-w", working_dir], check=True)
-    else:
-        sp.run(['testkraken', str(workflow_path)], check=True)
+    testkraken_specs(workflow_path=Path(workflow_path))
+    testkraken_run(workflow_path=workflow_path, working_dir=working_dir)
 
 
 
