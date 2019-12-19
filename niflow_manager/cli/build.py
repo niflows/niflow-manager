@@ -61,6 +61,7 @@ def neurodocker_dict(workflow_path):
         post_build["copy"] = [".", "/nfm"]
         post_build["miniconda"] = {"pip_install": ["https://github.com/djarecka/niflow-manager/tarball/new_testkraken"]}
         post_build["run_bash"] = "/opt/miniconda-latest/envs/testkraken/bin/nfm install /nfm/package/"
+        post_build["entrypoint"] = f"/opt/miniconda-latest/envs/testkraken/bin/niflow-{workflow_path.name}"
 
     for key, spec in post_build.items():
         if key == "miniconda":
