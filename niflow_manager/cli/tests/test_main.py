@@ -11,8 +11,8 @@ def test_utility_options(option):
 
 
 @pytest.mark.parametrize("command", ["test", "install", "build"])
-def test_unimplemented(command):
+def test_commads_help(command):
     runner = CliRunner()
-    result = runner.invoke(main, [command])
+    result = runner.invoke(main, [command, "--help"])
     assert result.exit_code == 0
-    assert "not yet implemented" in result.stdout
+
