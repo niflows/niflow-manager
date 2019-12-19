@@ -51,6 +51,7 @@ def neurodocker_dict(workflow_path):
             raise Exception(f"{key} is not a valid key, must be "
                             f"from the list {VALID_DOCKER_KEYS}")
         instructions.append(this_instruction)
+    instructions.insert(1, ("install", ["git"]))
 
     # adding post build part
     post_build = params.get("post_build", {})
@@ -58,7 +59,8 @@ def neurodocker_dict(workflow_path):
         # if post build not provided, it will use the default one that installs niflow-manager
         # and the package (after coping it first)
         post_build["copy"] = [".", "/nfm"]
-        post_build["miniconda"] = {"pip_install": ["niflow-manager", "/nfm/package/"]}
+        post_build["miniconda"] = {"pip_install": ["https://github.com/djarecka/niflow-manager/tarball/new_testkraken"]}
+        post_build["run_bash"] = "/opt/miniconda-latest/envs/testkraken/bin/nfm install /nfm/package/"
 
     for key, spec in post_build.items():
         if key == "miniconda":
