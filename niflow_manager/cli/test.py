@@ -5,7 +5,7 @@ import yaml
 
 def testkraken_specs(workflow_path):
     """reading spec.yml and creating testkraken yml file"""
-    with (workflow_path / 'spec.yml').open() as f:
+    with (workflow_path / "spec.yml").open() as f:
         params = yaml.safe_load(f)
 
     # everything what is in nfm_test, should be added
@@ -22,14 +22,16 @@ def testkraken_specs(workflow_path):
         # and the package (after coping it first)
         params_tkraken["post_build"] = {}
         params_tkraken["post_build"]["copy"] = [".", "/nfm"]
-        params_tkraken["post_build"]["miniconda"] = {"pip_install": ["niflow-manager", "/nfm/package/"]}
+        params_tkraken["post_build"]["miniconda"] = {
+            "pip_install": ["niflow-manager", "/nfm/package/"]
+        }
 
-    with (workflow_path / 'parameters.yaml').open("w") as f:
+    with (workflow_path / "parameters.yaml").open("w") as f:
         yaml.dump(params_tkraken, f, default_flow_style=False, sort_keys=False)
 
 
 def testkraken_run(workflow_path, working_dir=None):
     if working_dir:
-        sp.run(['testkraken', workflow_path, "-w", working_dir], check=True)
+        sp.run(["testkraken", workflow_path, "-w", working_dir], check=True)
     else:
-        sp.run(['testkraken', workflow_path], check=True)
+        sp.run(["testkraken", workflow_path], check=True)

@@ -15,4 +15,3 @@ def test_commads_help(command):
     runner = CliRunner()
     result = runner.invoke(main, [command, "--help"])
     assert result.exit_code == 0
-
