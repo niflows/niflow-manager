@@ -26,7 +26,7 @@ def testkraken_specs(workflow_path):
             "pip_install": ["niflow-manager", "/nfm/package/"]
         }
 
-    with (workflow_path / "parameters.yaml").open("w") as f:
+    with (workflow_path / "testkraken_spec.yml").open("w") as f:
         yaml.dump(params_tkraken, f, default_flow_style=False, sort_keys=False)
 
 
