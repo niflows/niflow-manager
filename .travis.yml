@@ -65,7 +65,7 @@ script:
     if [ "$CHECK" = "style" ]; then
         black --check --exclude templates/python setup.py niflow_manager
     elif [ "$CHECK" = "test" ]; then
-        py.test -v -s --cov niflow_manager --cov-report xml:cov.xml --doctest-modules niflow_manager
+        py.test -v -s --cov niflow_manager --cov-config setup.cfg --cov-report xml:cov.xml --doctest-modules niflow_manager
     fi
 
 after_script:
