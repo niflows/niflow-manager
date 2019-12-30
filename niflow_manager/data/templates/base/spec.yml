@@ -9,7 +9,7 @@
 #  afni:
 #    version: latest
 #  miniconda:
-#    conda_install: [python=3.7, nipype]
+#    conda_install: [python=3.7]
 #
 #  # test specification
 #nfm_test:
@@ -30,7 +30,7 @@
 #    afni:
 #    - version: latest
 #    miniconda:
-#    - conda_install: [python=2.7, nipype]
+#    - conda_install: [python=2.7]
 #  # specification for the analysis that will be run and the needed input (input files expected to be in the data dir),
 #  # if script is provided, it should be in the scripts directory
 #  analysis:

@@ -35,7 +35,9 @@ def test_init_build_python():
             spec_orig = f.readlines()
         with spec_path.open(mode="w") as f:
             for line in spec_orig:
-                f.write(line[1:])
+                # removing afni and fsl installation to shorten the test
+                if not ("fsl" in line or "afni" in line or "version" in line):
+                    f.write(line[1:])
 
         res_build = runner.invoke(main, ["build", str(niflow_path)])
         assert res_build.exit_code == 0
