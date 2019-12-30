@@ -139,7 +139,7 @@ def build_image(dockerfile, workflow_path, tag=None, build_opts=None):
 
 def docker_image(workflow_path, working_dir=None):
     """the main function to create Dockerfile and build the image"""
-    workflow_path = Path(workflow_path)
+    workflow_path = Path(workflow_path).absolute()
     if working_dir:
         working_dir = Path(working_dir).absolute()
     else:

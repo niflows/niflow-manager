@@ -1,0 +1,31 @@
+version: 2
+jobs:
+  build:
+    machine:
+      image: circleci/classic:201710-02
+    working_directory: /home/circleci/nfm_tests
+    steps:
+      - checkout:
+          path: /home/circleci/nfm_tests
+      - run:
+          name: Change to Python 3.7+ and install python dependencies
+          command: |
+            curl -fsSLO https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+            bash Miniconda3-latest-Linux-x86_64.sh -b -p ~/conda
+            rm Miniconda3-latest-Linux-x86_64.sh
+            echo "export PATH=~/conda/bin:$PATH" >> ~/.bashrc
+            source ~/.bashrc
+            conda config --system --prepend channels conda-forge
+            conda update -n base -yq conda
+            conda update -yq --all
+            pip install git+https://github.com/djarecka/niflow-manager.git@new_testkraken
+            #pip install --no-cache-dir -e /home/circleci/nfm_tests[dev]
+
+      - run:
+          name: Run tests
+          no_output_timeout: 60m
+          command: |
+            source ~/.bashrc
+            nfm test /home/circleci/nfm_tests -w /home/circleci/nfm_tests/outputs/{FULLNAME}
+      - store_artifacts:
+          path: /home/circleci/nfm_tests
