@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import subprocess as sp
 import yaml
+from pathlib import Path
+import click
 
 
 def testkraken_specs(workflow_path):
@@ -35,3 +37,16 @@ def testkraken_run(workflow_path, working_dir=None):
         sp.run(["testkraken", workflow_path, "-w", working_dir], check=True)
     else:
         sp.run(["testkraken", workflow_path], check=True)
+
+
+@click.argument("workflow_path", type=click.Path(), default=".")
+@click.option(
+    "-w",
+    "--working-dir",
+    type=click.Path(),
+    help="Working directory, default is a temporary directory.",
+)
+def test(workflow_path, working_dir=None):
+    print(f"testing {workflow_path}")
+    testkraken_specs(workflow_path=Path(workflow_path))
+    testkraken_run(workflow_path=workflow_path, working_dir=working_dir)

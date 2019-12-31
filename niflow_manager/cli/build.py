@@ -4,6 +4,7 @@ import tempfile, os, json
 from pathlib import Path
 from copy import deepcopy
 import yaml
+import click
 import neurodocker as ndr
 
 # default setting for specific neurodocker keys,
@@ -163,3 +164,15 @@ def docker_image(workflow_path, working_dir=None):
         workflow_path=workflow_path,
         tag=f"nfm-{workflow_path.name}",
     )
+
+
+@click.argument("workflow_path", type=click.Path(), default=".")
+@click.option(
+    "-w",
+    "--working-dir",
+    type=click.Path(),
+    help="Working directory, default is a temporary directory.",
+)
+def build(workflow_path, working_dir=None):
+    print("build", workflow_path)
+    docker_image(workflow_path=workflow_path, working_dir=working_dir)
