@@ -1,6 +1,7 @@
 import pytest
 from click.testing import CliRunner
 from pathlib import Path
+import subprocess as sp
 from .. import main
 
 
@@ -18,8 +19,8 @@ def test_commads_help(command):
     assert result.exit_code == 0
 
 
-def test_init_build_python():
-    """ initilize a niflow for python and build a container using the default spec"""
+def test_default_python():
+    """ initilize a niflow for python, and build/test a container using the default spec"""
     runner = CliRunner()
     with runner.isolated_filesystem():
         res_init = runner.invoke(
@@ -30,14 +31,23 @@ def test_init_build_python():
         assert res_init.exit_code == 0
         assert spec_path.exists()
 
-        # uncommenting the spec file
-        with spec_path.open() as f:
-            spec_orig = f.readlines()
-        with spec_path.open(mode="w") as f:
-            for line in spec_orig:
-                # removing afni and fsl installation to shorten the test
-                if not ("fsl" in line or "afni" in line or "version" in line):
-                    f.write(line[1:])
-
         res_build = runner.invoke(main, ["build", str(niflow_path)])
         assert res_build.exit_code == 0
+        # checking the built container
+        dockerrun = sp.run(
+            ["docker", "run", "--rm", "nfm-niflow-org-wf:latest"],
+            stdout=sp.PIPE,
+            stderr=sp.PIPE,
+        )
+        assert dockerrun.returncode == 0
+
+        res_test = runner.invoke(main, ["test", str(niflow_path)])
+        assert res_test.exit_code == 0
+
+        working_dir = Path.cwd() / "output"
+        res_test_w = runner.invoke(
+            main, ["test", "-w", str(working_dir), str(niflow_path)]
+        )
+        assert res_test_w.exit_code == 0
+        # checking if there is output file produced by testkraken
+        assert (working_dir / "output_all.csv").exists()

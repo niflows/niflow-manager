@@ -10,8 +10,8 @@ def testkraken_specs(workflow_path):
     with (workflow_path / "spec.yml").open() as f:
         params = yaml.safe_load(f)
 
-    # everything what is in nfm_test, should be added
-    params_tkraken = params["nfm_test"]
+    # everything what is in test, should be added
+    params_tkraken = params["test"]
     fixed_envs_tkraken = params_tkraken.get("fixed_env", [])
     # requiremnts should be one of the fixed_env
     fixed_envs_tkraken.append(params["requirements"])

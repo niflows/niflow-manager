@@ -1,50 +1,44 @@
-#  # requirement for the environment needed to run the analyses
-#requirements:
-#  # example below, see full Neurodocker spcification: https://github.com/ReproNim/neurodocker#supported-software
-#  base:
-#    image: debian:stretch
-#    pkg-manager: apt
+# requirement for the environment needed to run the analyses,
+# it will be used to create an image with `nfm build`
+# it will be also used as an additional environment during testing with `nfm test`
+requirements:
+# example below, see full Neurodocker spcification: https://github.com/ReproNim/neurodocker#supported-software
+  base:
+    image: debian:stretch
+    pkg-manager: apt
+  miniconda:
+    conda_install: [python=3.7, nipype]
 #  fsl:
 #    version: 5.0.10
 #  afni:
 #    version: latest
-#  miniconda:
-#    conda_install: [python=3.7]
 #
-#  # test specification
-#nfm_test:
-#  # default place for place the data, can be changed
-#  data:
-#    type: workflow_path
-#    location: test/data
-#  # default place to place the scripts, can be changed
-#  scripts:
-#    test/scripts
-#  # additional (to the one defined in the requirements) environments for testing
-#  env:
-#    base:
-#    - image: debian:stretch
-#      pkg-manager: apt
-#    fsl:
-#    - version: 5.0.10
-#    afni:
-#    - version: latest
-#    miniconda:
-#    - conda_install: [python=2.7]
-#  # specification for the analysis that will be run and the needed input (input files expected to be in the data dir),
-#  # if script is provided, it should be in the scripts directory
-#  analysis:
-#    inputs:
-#     - type: File
-#       value: sub-01_ses-test_T1w.nii.gz
-#     - type: str
-#       name: out_name
-#       value: sub-01_out.nii.gz
-#       output_file: True
-#    command: niflow-coco2019-unifize_and_skullstrip
+# test specification
+test:
+  # default location for data in the niflows is test/data in the workflow path
+  data:
+    type: workflow_path
+    location: test/data
+  # default location for scripts in the niflows is test/scripts in the workflow path
+  scripts: test/scripts
+
+  # additional (to the one defined in the requirements) environments for testing
+  # a simple example that has only one base image and one miniconda environment
+  env:
+    base:
+    - image: debian:stretch
+      pkg-manager: apt
+    miniconda:
+    - conda_install: [python=3.5, nipype]
+
+  # specification for the analysis that will be run and the needed input (input files expected to be in the data dir),
+  # if script is provided, it should be in the scripts directory
+  analysis:
+    inputs: []
+    command: niflow-{ORGANIZATION}-{WORKFLOW}
 #  # specification for the output testing: script should be either in the scripts dir or from TestKraken
 #  # file should be an output name and the reference one should be in the data dir
-#  tests:
+  tests: []
 #  - file: out_name
 #    name: regr1
 #    script: test_obj_eq.py
