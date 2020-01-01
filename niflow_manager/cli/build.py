@@ -69,7 +69,7 @@ def neurodocker_dict(workflow_path):
         }
         post_build[
             "run_bash"
-        ] = "/opt/miniconda-latest/envs/testkraken/bin/nfm install /nfm/package/"
+        ] = "/opt/miniconda-latest/envs/testkraken/bin/nfm install /nfm"
         post_build[
             "entrypoint"
         ] = f"/opt/miniconda-latest/envs/testkraken/bin/{workflow_path.name}"
