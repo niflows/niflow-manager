@@ -70,9 +70,7 @@ def neurodocker_dict(workflow_path):
         post_build["copy"] = [".", "/nfm"]
         # TODO should be updated and the git could be removed
         post_build["miniconda"] = {
-            "pip_install": [
-                "https://github.com/djarecka/niflow-manager/tarball/new_testkraken"
-            ]
+            "pip_install": ["https://github.com/niflows/niflow-manager/tarball/master"]
         }
         # installing niflow
         post_build[
