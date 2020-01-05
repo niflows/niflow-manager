@@ -7,9 +7,8 @@ cache:
     - $HOME/.cache/pip
 
 python:
-  - 3.6
   - 3.7
-  - 3.8-dev
+  - 3.8
 
 env:
   global:
@@ -64,9 +63,9 @@ before_script:
 script:
   - |
     if [ "$CHECK" = "style" ]; then
-        black --check --py36 --exclude templates/python setup.py niflow_manager
+        black --check --exclude templates/python setup.py niflow_manager
     elif [ "$CHECK" = "test" ]; then
-        py.test -v -s --cov niflow_manager --cov-report xml:cov.xml --doctest-modules niflow_manager
+        py.test -v -s --cov niflow_manager --cov-config setup.cfg --cov-report xml:cov.xml --doctest-modules niflow_manager
     fi
 
 after_script:

@@ -1,6 +1,10 @@
 import click
+
 from .. import __version__
 from .init import init
+from .install import install
+from .build import build
+from .test import test
 
 
 @click.group()
@@ -11,17 +15,8 @@ def main():
 
 main.command()(init)
 
+main.command()(install)
 
-@main.command()
-def install():
-    print("install command not yet implemented")
+main.command()(build)
 
-
-@main.command()
-def test():
-    print("test command not yet implemented")
-
-
-@main.command()
-def build():
-    print("build command not yet implemented")
+main.command()(test)

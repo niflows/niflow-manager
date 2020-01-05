@@ -1,0 +1,49 @@
+# the build part will be used to create an image with `nfm build`
+# required_env is the required entry and it specifies the environment needed to run the analyses,
+# required_env will be also used as an additional environment during testing with `nfm test`
+# entrypoint - an optional entrypoint for the container (niflow-{ORGANIZATION}-{WORKFLOW} is the default value)
+build:
+  # example below, see full Neurodocker spcification: https://github.com/ReproNim/neurodocker#supported-software
+  required_env:
+    base:
+      image: debian:stretch
+      pkg-manager: apt
+    miniconda:
+      conda_install: [python=3.7, nipype]
+#    fsl:
+#      version: 5.0.10
+#    afni:
+#      version: latest
+#
+# optional entrypoint, for python, the default value is
+#  entrypoint: /opt/miniconda-latest/envs/testkraken/bin/niflow-{ORGANIZATION}-{WORKFLOW}
+
+# test specification
+test:
+  # default location for data in the niflows is test/data in the workflow path
+  data:
+    type: workflow_path
+    location: test/data
+  # default location for scripts in the niflows is test/scripts in the workflow path
+  scripts: test/scripts
+
+  # additional (to the one defined in the build.required_env) environments for testing
+  # a simple example that has only one base image and one miniconda environment
+  env:
+    base:
+    - image: debian:stretch
+      pkg-manager: apt
+    miniconda:
+    - conda_install: [python=3.5, nipype]
+
+  # specification for the analysis that will be run and the needed input (input files expected to be in the data dir),
+  # if script is provided, it should be in the scripts directory
+  analysis:
+    inputs: []
+    command: niflow-{ORGANIZATION}-{WORKFLOW}
+#  # specification for the output testing: script should be either in the scripts dir or from TestKraken
+#  # file should be an output name and the reference one should be in the data dir
+  tests: []
+#  - file: out_name
+#    name: regr1
+#    script: test_obj_eq.py
