@@ -9,7 +9,7 @@ import neurodocker as ndr
 
 # default setting for specific neurodocker keys,
 # this value will not have to be set in the parameters.yml, but can be overwritten
-DEFAULT_INSTRUCTIONS = {"miniconda": {"create_env": "testkraken", "activate": True}}
+DEFAULT_INSTRUCTIONS = {"miniconda": {"create_env": "niflows", "activate": True}}
 # all keys allowed by neurodocker for Docker
 VALID_DOCKER_KEYS = ndr.Dockerfile._implementations.keys()
 
@@ -77,21 +77,21 @@ def neurodocker_dict(workflow_path):
         # installing niflow
         post_build[
             "run_bash"
-        ] = "/opt/miniconda-latest/envs/testkraken/bin/nfm install /nfm"
+        ] = "/opt/miniconda-latest/envs/niflows/bin/nfm install /nfm"
         # adding entrypoint to the container
         if params_entry:
             post_build["entrypoint"] = params_entry
         else:
             post_build[
                 "entrypoint"
-            ] = f"/opt/miniconda-latest/envs/testkraken/bin/{workflow_path.name}"
+            ] = f"/opt/miniconda-latest/envs/niflows/bin/{workflow_path.name}"
 
     for key, spec in post_build.items():
         if key == "miniconda":
             if miniconda_env:
                 miniconda_dict = {"use_env": miniconda_env}
             else:
-                miniconda_dict = {"create_env": "testkraken"}
+                miniconda_dict = {"create_env": "niflows"}
             miniconda_dict.update(spec)
             instructions.append(("miniconda", miniconda_dict))
         else:
@@ -164,7 +164,7 @@ def docker_image(workflow_path, working_dir=None):
         dockerfile.unlink()
     jsonfile = working_dir / f"nrd_spec.json"
     if jsonfile.exists():
-        jsonfile.exists()
+        jsonfile.unlink()
 
     nrd_dict = neurodocker_dict(workflow_path=workflow_path)
     with open(jsonfile, "w") as fj:
