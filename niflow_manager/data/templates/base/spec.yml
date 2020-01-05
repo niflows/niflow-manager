@@ -1,18 +1,23 @@
-# requirement for the environment needed to run the analyses,
-# it will be used to create an image with `nfm build`
-# it will be also used as an additional environment during testing with `nfm test`
-requirements:
-# example below, see full Neurodocker spcification: https://github.com/ReproNim/neurodocker#supported-software
-  base:
-    image: debian:stretch
-    pkg-manager: apt
-  miniconda:
-    conda_install: [python=3.7, nipype]
-#  fsl:
-#    version: 5.0.10
-#  afni:
-#    version: latest
+# the build part will be used to create an image with `nfm build`
+# required_env is the required entry and it specifies the environment needed to run the analyses,
+# required_env will be also used as an additional environment during testing with `nfm test`
+# entrypoint - an optional entrypoint for the container (niflow-{ORGANIZATION}-{WORKFLOW} is the default value)
+build:
+  # example below, see full Neurodocker spcification: https://github.com/ReproNim/neurodocker#supported-software
+  required_env:
+    base:
+      image: debian:stretch
+      pkg-manager: apt
+    miniconda:
+      conda_install: [python=3.7, nipype]
+#    fsl:
+#      version: 5.0.10
+#    afni:
+#      version: latest
 #
+# optional entrypoint, for python, the default value is
+#  entrypoint: /opt/miniconda-latest/envs/testkraken/bin/niflow-{ORGANIZATION}-{WORKFLOW}
+
 # test specification
 test:
   # default location for data in the niflows is test/data in the workflow path
@@ -22,7 +27,7 @@ test:
   # default location for scripts in the niflows is test/scripts in the workflow path
   scripts: test/scripts
 
-  # additional (to the one defined in the requirements) environments for testing
+  # additional (to the one defined in the build.required_env) environments for testing
   # a simple example that has only one base image and one miniconda environment
   env:
     base:

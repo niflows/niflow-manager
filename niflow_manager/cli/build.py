@@ -16,14 +16,21 @@ VALID_DOCKER_KEYS = ndr.Dockerfile._implementations.keys()
 
 def neurodocker_dict(workflow_path):
     """reading spec.yml and creating neurodocker dict
-        for the environment defined in the requirements and post_build parts
+        for the environment defined in the build part
     """
     with (workflow_path / "spec.yml").open() as f:
         params = yaml.safe_load(f)
     instructions = []
 
-    # treating requirement as one env spec
-    params_env = params["requirements"]
+    if "build" not in params:
+        raise Exception("spec.yml file has to contain the build part")
+    if "required_env" not in params["build"]:
+        raise Exception("the build part of the spec has to contain required_env")
+    # treating required_env as one env spec
+    params_env = params["build"]["required_env"]
+    # checking if entrypoint is provided
+    params_entry = params["build"].get("entrypoint", None)
+
     if "base" not in params_env.keys():
         raise ValueError("base image has to be provided")
 
@@ -67,12 +74,17 @@ def neurodocker_dict(workflow_path):
                 "https://github.com/djarecka/niflow-manager/tarball/new_testkraken"
             ]
         }
+        # installing niflow
         post_build[
             "run_bash"
         ] = "/opt/miniconda-latest/envs/testkraken/bin/nfm install /nfm"
-        post_build[
-            "entrypoint"
-        ] = f"/opt/miniconda-latest/envs/testkraken/bin/{workflow_path.name}"
+        # adding entrypoint to the container
+        if params_entry:
+            post_build["entrypoint"] = params_entry
+        else:
+            post_build[
+                "entrypoint"
+            ] = f"/opt/miniconda-latest/envs/testkraken/bin/{workflow_path.name}"
 
     for key, spec in post_build.items():
         if key == "miniconda":

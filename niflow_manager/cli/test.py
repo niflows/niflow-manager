@@ -13,8 +13,8 @@ def testkraken_specs(workflow_path):
     # everything what is in test, should be added
     params_tkraken = params["test"]
     fixed_envs_tkraken = params_tkraken.get("fixed_env", [])
-    # requiremnts should be one of the fixed_env
-    fixed_envs_tkraken.append(params["requirements"])
+    # required_env from the build part should be one of the fixed_env
+    fixed_envs_tkraken.append(params["build"]["required_env"])
     params_tkraken["fixed_env"] = fixed_envs_tkraken
 
     if params.get("post_build", None):
