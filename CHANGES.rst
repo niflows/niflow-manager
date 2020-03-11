@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 0.0.3 (March 11, 2020)
+------------------------------
+
+* ENH: Implement nfm test, build and install for Python packages (#26)
+* ENH: Update Python skeleton with better data packaging instructions (#25)
+* CI: Add style check (#22)
+
 Version 0.0.2 (July 15, 2019)
 -----------------------------
 
