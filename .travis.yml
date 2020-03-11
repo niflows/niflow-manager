@@ -1,5 +1,5 @@
+os: linux
 dist: xenial
-sudo: true
 language: python
 
 cache:
@@ -14,14 +14,14 @@ env:
   global:
     - INSTALL=pip
     - CHECK=test
-  matrix:
+  jobs:
     - INSTALL=pip
     - INSTALL=install
     - INSTALL=develop
     - INSTALL=sdist
     - INSTALL=wheel
 
-matrix:
+jobs:
   include:
     - python: 3.7
       env: CHECK=style
