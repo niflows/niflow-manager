@@ -73,3 +73,14 @@ after_script:
     if [ "$CHECK" = "test" ]; then
         codecov --file cov.xml --flags unittests -e TRAVIS_JOB_NUMBER
     fi
+
+deploy:
+  provider: pypi
+  user: "__token__"
+  password:
+    secure: UaZXiP89K+hN5cPZgJkqw4bTm+kobw5Go4GN0jA25gocoqLIQkj8t4LKsUii6VtUC4L0ux2RHTgQlyr97TZ7sQM5kbJMfEn/G0DDpDP3WgpCcRBbJayrDloVLclMj87Y9VrV0dt2/P0smDH3abzEr6PKaPZ9Pr2spTEfF03mRvmRPNAKkJIEO01NDBXqPN2VlGLsdmattVhiAXzW2GzMlMBLqqRlCGjB2rLNG9wPeu219WJq46EEgIjYLAcU/oORKlnn0lSOTH5pMTuuudmymCZ+vqWF23S+9x8d80jlsIBkQQjPCi+0ULnvQq2j5DRN+WXjDNn5pkH04GHyMTt80ZZzybvVrKbQfChgI4CqD8nPIiwxT2U9V0R860SLnKmfs+K1tRnSfWvtnJ5ykmyg0l1EKSHLlJ3Z38cBYOHDu0jJGeLIzXIbmI8GmaftOjcEzxcU90eB2jCrHZclNS4VHaFS4+RUv7FcYUMKN5Ikwr//EbDNnWWH+yI9Hic+67XkEsS6vyeJR0fk4aYs/2so6r+auEcgTAt4SoliN5NNnobXEeVHR3WJPWcZj41v/IWpSS6ocBU74RuXk2zVjlD7EsdyK3QmbDvKaY8m55kOVDzWuyrbBi6+VjPyM46dbsLbsZeQ6V9u/k0xEkERFX07ntDoU29KksY+JrhJgCII7oQ=
+  skip_cleanup: true
+  distributions: sdist bdist_wheel
+  skip_existing: true
+  on:
+    tags: true
