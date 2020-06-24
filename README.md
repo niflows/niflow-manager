@@ -3,13 +3,23 @@
 [![codecov](https://codecov.io/gh/niflows/niflow-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/niflows/niflow-manager)
 
 Niflows are an organizational structure that is targeted at making neuroimaging
-tools and analyses FAIR (findable, accessible, interoperable, and reusable) ith
+tools and analyses FAIR (findable, accessible, interoperable, and reusable) with
 strong assurances of compatibility across environments.
+
+Niflows builds on the lessons of the Nipype ecosystem to support user contributed
+Workflows as packages. These workflows can be written in any language. Niflows does 
+not restrict a package to be written in Python, but provides additional tooling 
+if it is. Niflows integreates a specific structure for data, code, and tests and 
+a comprehensive test suite to allow for better validation of each Workflow, and
+easier reuse of Workflows in containerized form.
+
+Niflows is intended to provide replicable workflows that quantify their variability
+across datasets and operating environments (i.e., different operating systems, 
+versions of libraries and software). 
 
 ## Niflow manager
 `niflow-manager`, which provides the `nfm` command-line tool, aims to support
-niflow creation, testing, and packaging.
-It provides the following sub-commands:
+niflow creation, testing, and packaging. It provides the following sub-commands:
 
 * `nfm init` - Create a stub workflow, with templates for desired languages
 * `nfm install` - Install niflows from an online registry or source
@@ -31,13 +41,10 @@ The `build` part is used to create an image when `nfm build` is run.
 #### Specification of the environment
 
 The main part of the build specification is `required_env` and it specifies the environment needed to run the workflow.
-Since [Nuerodocker](https://github.com/ReproNim/neurodocker) is used to create Dockerfile, we are using the same fields as Neurodocker specification 
+Since [Neurodocker](https://github.com/ReproNim/neurodocker) is used to create Dockerfile, we are using the same fields as Neurodocker specification 
 (with one exception that the base part should contain image and pkg-manager in one dictionary).
 The full Neurodocker specification can be found [here](https://github.com/ReproNim/neurodocker#supported-software). 
 Specification in the `required_env` is also used as an additional environment during testing with `nfm test.`
-
-#### Specification of the entry point
-An optional field `entrypoint` is used to set an entrypoint for the container (niflow-{ORGANIZATION}-{WORKFLOW} is the default value).
 
 ```
 build:
@@ -53,11 +60,17 @@ build:
       version: latest
 ```
 
+#### Specification of the entry point
+An optional field `entrypoint` is used to set an entrypoint for the container 
+(niflow-{ORGANIZATION}-{WORKFLOW} is the default value). This allows each
+Workflow to be used from the shell without any additional programming.
+
 ### Test part
 The `test` part is used to test the workflow when `nfm test` is run and it follows the [TestKraken](https://github.com/ReproNim/testkraken) specification.
 
 #### Specification of the computational environments
-The computational environments for the tested analysis can be described in `env` or `fixed_env` (one or both elements have to be specified in the specification). 
+Testing can be performed in several computational environments. These environments 
+can be described in `env` or `fixed_env` (one or both elements have to be specified in the specification). 
 As in the `build` part, the environment specification uses components from the _Neurodocker_ specification. 
 There is one difference, that `base` part should contain `image` and `pkg-manager` in one dictionary.
 
